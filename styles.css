@@ -34,7 +34,7 @@ header{
   gap:1rem;
   margin-bottom:1.25rem;
 }
-.lock{
+.card{
   width:40px;height:40px;border-radius:12px;
   display:grid;place-items:center;
   background: linear-gradient(180deg, #17314a, #0f1c29);
