@@ -1,75 +1,93 @@
-function validateCard() {
-    const cardNumber = document.getElementById('cardNumber').value;
-    const networkInfo = document.getElementById('networkInfo');
-    const validationResult = document.getElementById('validationResult');
+// --- element refs ---
+const ccInput     = document.getElementById("cc");
+const brandLogo   = document.getElementById("brand-logo");
+const brandNameEl = document.getElementById("brand-name");
+const networkEl   = document.getElementById("network");
+const lengthEl    = document.getElementById("length");
+const checkPill   = document.getElementById("check-pill");
+const statusText  = document.getElementById("status-text");
 
-    // Reset output
-    networkInfo.innerHTML = ""; // Use innerHTML to insert HTML content
-    validationResult.textContent = "";
+// helpers
+const strip  = s => (s || "").replace(/\D+/g, "");
+const group4 = digits => digits.replace(/(.{4})/g, "$1 ").trim();
 
-    if (!/^\d{13,16}$/.test(cardNumber)) {
-        validationResult.textContent = "Please enter a valid credit card with 13, 15, or 16 digits.";
-        validationResult.style.color = "red";
-        return;
-    }
+// detect network + local logo path
+function detectNetwork(d) {
+  let name = "Other";
+  let logo = "";
 
-    const network = detectNetwork(cardNumber);
-    const networkIcon = getNetworkIcon(network);
-
-    if (networkIcon) {
-        networkInfo.innerHTML = `Type of Payment Network: ${network} <img src="${networkIcon}" alt="${network} logo" style="width: 30px; height: 20px; vertical-align: middle; margin-left: 5px;">`;
-    } else {
-        networkInfo.textContent = `Type of Payment Network: ${network}`;
-    }
-
-    if (luhnCheck(cardNumber)) {
-        validationResult.textContent = "This card is Valid! It passed the Luhn test.";
-        validationResult.style.color = "green";
-    } else {
-        validationResult.textContent = "This card is not Valid.";
-        networkInfo.textContent = "Type of Payment Network: Invalid";
-        validationResult.style.color = "red";
-    }
+  if (/^4\d{12}(\d{3})?(\d{3})?$/.test(d)) {
+    name = "Visa"; logo = "./visa.png";
+  } else if (/^(5[1-5]\d{14})$/.test(d) || /^(2221|2[2-6]\d{2}|27[01]\d|2720)\d{12}$/.test(d)) {
+    name = "Mastercard"; logo = "./mastercard.png";
+  } else if (/^(34|37)\d{13}$/.test(d)) {
+    name = "American Express"; logo = "./amex.png";
+  } else if (/^6011\d{12}$/.test(d) || /^65\d{14}$/.test(d) || /^64[4-9]\d{13}$/.test(d)) {
+    name = "Discover"; logo = "./discover.png";
+  }
+  return { name, logo };
 }
 
-function detectNetwork(cardNumber) {
-    if (cardNumber.startsWith("4")) return "Visa";
-    if (cardNumber.startsWith("5")) return "MasterCard";
-    if (cardNumber.startsWith("34") || cardNumber.startsWith("37")) return "American Express";
-    if (cardNumber.startsWith("6011")) return "Discover";
-    return "Other";
+function updateBrandUI({ name, logo }) {
+  brandNameEl.textContent = name;
+  networkEl.textContent = name;
+
+  if (logo) {
+    brandLogo.src = logo;
+    brandLogo.alt = `${name} logo`;
+    brandLogo.style.display = "inline-block";  // <- show it
+  } else {
+    brandLogo.removeAttribute("src");
+    brandLogo.alt = "";
+    brandLogo.style.display = "none";
+  }
 }
 
-function getNetworkIcon(network) {
-    switch (network) {
-        case "Visa":
-            return "visa.png";
-        case "MasterCard":
-            return "mastercard.png";
-        case "American Express":
-            return "amex.png";
-        case "Discover":
-            return "discover.png";
-        default:
-            return null; // No icon for "Other"
-    }
-}
+// live formatting + preview
+ccInput.addEventListener("input", () => {
+  const cursorFromEnd = ccInput.value.length - ccInput.selectionStart;
+  const digits = strip(ccInput.value);
+  ccInput.value = group4(digits);
+  const newPos = Math.max(ccInput.value.length - cursorFromEnd, 0);
+  ccInput.setSelectionRange(newPos, newPos);
 
-function luhnCheck(cardNumber) {
-    let sum = 0;
-    let shouldDouble = false;
+  const info = digits ? detectNetwork(digits) : { name: "—", logo: "" };
+  updateBrandUI(info);
+  lengthEl.textContent = digits ? digits.length : "—";
 
-    for (let i = cardNumber.length - 1; i >= 0; i--) {
-        let digit = parseInt(cardNumber[i]);
+  // reset status pill while typing
+  checkPill.className = "pill warn";
+  checkPill.textContent = "Not run";
+  statusText.textContent = "—";
+});
 
-        if (shouldDouble) {
-            digit *= 2;
-            if (digit > 9) digit -= 9;
-        }
+// (optional) simple validate on submit using Luhn
+document.getElementById("validator").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const digits = strip(ccInput.value);
+  if (!digits) return;
 
-        sum += digit;
-        shouldDouble = !shouldDouble;
-    }
+  // Luhn
+  const arr = digits.split("").reverse().map(n => +n);
+  let sum = 0;
+  for (let i=0; i<arr.length; i++) {
+    let v = arr[i];
+    if (i % 2 === 1) { v *= 2; if (v > 9) v -= 9; }
+    sum += v;
+  }
+  const valid = sum % 10 === 0;
 
-    return sum % 10 === 0;
-}
+  checkPill.className = "pill " + (valid ? "valid" : "invalid");
+  checkPill.textContent = valid ? "Luhn passed" : "Luhn failed";
+  statusText.textContent = valid ? "Valid (Luhn passed)" : "Invalid (Luhn failed)";
+});
+
+// clear
+document.getElementById("clear").addEventListener("click", () => {
+  ccInput.value = "";
+  updateBrandUI({ name: "—", logo: "" });
+  lengthEl.textContent = "—";
+  checkPill.className = "pill warn";
+  checkPill.textContent = "Not run";
+  statusText.textContent = "—";
+});

@@ -1,27 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Credit Card Validator</title>
-    <link rel="icon" type="image/x-icon" href="./card.png">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="./card.png">
+  <link rel="stylesheet" href="styles.css" />
+  <title>Credit Card Validator</title>
+  
 </head>
 <body>
-    <img src="card.png" alt="Site Icon" id="siteIcon">
-    <h1 class="validator-title">Credit Card Validator</h1>
-    <div class="container">
+  <div class="wrap">
+    <header>
+      <div class="lock" aria-hidden="true">
+        <!-- simple lock icon -->
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M7 10V8a5 5 0 1 1 10 0v2" stroke="#9bb0c3" stroke-width="1.6" stroke-linecap="round"/>
+          <rect x="4" y="10" width="16" height="10" rx="2.5" stroke="#cfe0f0" stroke-width="1.6"/>
+          <circle cx="12" cy="15" r="1.6" fill="#cfe0f0"/>
+        </svg>
+      </div>
+      <div class="title">
         <h1>Credit Card Validator</h1>
-        <form id="cardForm">
-            <input type="text" id="cardNumber" placeholder="Enter card number" maxlength="16" required>
-            <button type="button" onclick="validateCard()">Validate</button>
-        </form>
-        <p id="networkInfo"></p>
-        <p id="validationResult"></p>
-    </div>
-    <footer id="footer">
-        <p>&copy; 2024 <a href="https://jasonpereira.netlify.app/" target="_blank">Jason Pereira</a>. All Rights Reserved</p>
-    </footer>
-    <script src="script.js"></script>
+        <p>Local-only Luhn check with network detection. We don’t send or store any numbers.</p>
+      </div>
+    </header>
+
+    <section class="panel" aria-labelledby="form-title">
+      <h2 id="form-title" class="sr-only">Card validation form</h2>
+      <form id="validator" novalidate>
+        <div class="field">
+          <label for="cc">Card number</label>
+          <div class="cc-input" id="cc-box">
+            <input id="cc" name="cc" inputmode="numeric"
+                   placeholder="#### #### #### ####"
+                   aria-describedby="cc-hint cc-status"
+                   maxlength="23" />
+            <div class="brand-chip" id="brand">
+              <img id="brand-logo" alt="" />
+              <span id="brand-name">—</span>
+            </div>
+          </div>
+          <div class="hint" id="cc-hint">
+            <span>Allowed lengths: 13, 15, or 16 digits.</span>
+            <span>Tip: you can paste test numbers.</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <button type="submit" id="check">Validate</button>
+          <button type="button" id="clear" aria-label="Clear card number">Clear</button>
+        </div>
+
+        <div class="result" aria-live="polite" aria-atomic="true">
+          <div class="badge" id="status-badge">
+            Status: <strong id="status-text">—</strong>
+          </div>
+          <div class="meta" id="meta">
+            <div>Network: <span id="network">—</span></div>
+            <div>Length: <span id="length">—</span></div>
+            <div>Check: <span id="check-pill" class="pill warn">Not run</span></div>
+          </div>
+
+          <details id="details" hidden>
+            <summary>Show algorithm details</summary>
+            <div class="meta" id="detail-lines"></div>
+          </details>
+        </div>
+      </form>
+
+      <footer>
+        Luhn algorithm reference: widely used for PAN validation. For further understanding, see Stripe article
+        <a href="https://stripe.com/resources/more/how-to-use-the-luhn-algorithm-a-guide-in-applications-for-businesses" target="_blank" rel="noopener noreferrer">what is the Luhn algorithm</a>.
+      </footer>
+    </section>
+  </div>
+  <footer class="copyright">
+    © 2024 <a href="https://jasonpereira.netlify.app" target="_blank" rel="noopener noreferrer">Jason Pereira</a>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>

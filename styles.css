@@ -1,187 +1,208 @@
-/* Reset some default styling */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+:root{
+  --bg:#0b1520;
+  --panel:#0f1c29;
+  --ink:#e8eef5;
+  --muted:#9bb0c3;
+  --accent:#4B9CD3;       /* subtle, trustworthy blue */
+  --valid:#26c281;
+  --invalid:#ff5a5f;
+  --warn:#ffb020;
+  --ring: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
+  --radius:16px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.03);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol";
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #17314a 0%, transparent 60%),
+    radial-gradient(1200px 600px at 110% 110%, #17314a 0%, transparent 60%),
+    var(--bg);
+  line-height:1.5;
+}
+.wrap{
+  max-width: 920px;
+  margin: min(8vh,5rem) auto;
+  padding: 0 1rem;
+}
+header{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  margin-bottom:1.25rem;
+}
+.lock{
+  width:40px;height:40px;border-radius:12px;
+  display:grid;place-items:center;
+  background: linear-gradient(180deg, #17314a, #0f1c29);
+  box-shadow: var(--shadow);
+  flex: 0 0 auto;
+}
+.title h1{
+  margin:0;
+  font-size: clamp(1.25rem, 1.1rem + 1.2vw, 1.85rem);
+  letter-spacing:.2px;
+}
+.title p{
+  margin:.2rem 0 0;
+  color:var(--muted);
+  font-size:.95rem;
 }
 
-/* Set up a background gradient for a modern feel */
-body {
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: #333;
+.panel{
+  background:linear-gradient(180deg, #0f1c29, #0c1824);
+  border:1px solid #16283a;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(1rem, 1rem + 1.2vw, 1.75rem);
 }
 
-/* Main container with a white background, shadow, and rounded corners */
-.container {
-    background-color: #ffffff;
-    width: 90%;
-    max-width: 400px;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    text-align: center;
+form{
+  display:grid;
+  gap:1rem;
+}
+.field{
+  display:grid; gap:.5rem;
+}
+label{
+  color:var(--muted);
+  font-size:.95rem;
+}
+.cc-input{
+  display:flex; align-items:center; gap:.6rem;
+  background:#0a1420; border:1px solid #193049;
+  border-radius:12px; padding:.85rem .95rem;
+  outline:none;
+  transition:border-color .2s, box-shadow .2s, background .2s;
+}
+.cc-input:focus-within{
+  border-color:var(--accent);
+  box-shadow: var(--ring);
+}
+.cc-input input{
+  background: transparent;
+  color:var(--ink);
+  border:0; outline:0; font-size:1.05rem; width:100%;
+  letter-spacing:.6px;
+}
+.brand-chip{
+  min-width:92px;
+  text-align:right;
+  color:var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-size:.9rem;
+  opacity:.9;
+}
+.hint{
+  color:var(--muted); font-size:.85rem;
+  display:flex; justify-content:space-between; gap:.75rem; flex-wrap:wrap;
 }
 
-/* Styling the heading */
-h1 {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 20px;
+.row{
+  display:grid; gap:1rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px){
+  .row{ grid-template-columns: 1fr 1fr; }
 }
 
-/* Input field styling for a modern look */
-input {
-    width: 100%;
-    padding: 12px;
-    margin: 15px 0;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    transition: all 0.3s ease;
+button{
+  appearance:none; border:0; cursor:pointer;
+  padding:.9rem 1.1rem; border-radius:12px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 80%, #fff 0%), var(--accent));
+  color:white; font-weight:600; letter-spacing:.2px;
+  box-shadow: 0 8px 18px rgba(75,156,211,.25);
+  transition: transform .06s ease, filter .15s ease;
+}
+button:hover{ filter: brightness(1.06) }
+button:active{ transform: translateY(1px) }
+
+.result{
+  margin-top:.5rem;
+  display:grid;
+  gap:.75rem;
+}
+.badge{
+  display:inline-flex; align-items:center; gap:.5rem;
+  font-weight:600; padding:.5rem .7rem; border-radius:10px;
+  border:1px solid #20364d; background:#0b1622; color:var(--muted);
+}
+.badge strong{ color: var(--ink) }
+.pill{
+  display:inline-flex; align-items:center; gap:.45rem;
+  border-radius:999px; padding:.35rem .6rem; font-size:.87rem; font-weight:600;
+}
+.pill.valid{ background: color-mix(in srgb, var(--valid) 16%, transparent); color: var(--valid); border:1px solid color-mix(in srgb, var(--valid) 40%, transparent)}
+.pill.invalid{ background: color-mix(in srgb, var(--invalid) 16%, transparent); color: var(--invalid); border:1px solid color-mix(in srgb, var(--invalid) 40%, transparent)}
+.pill.warn{ background: color-mix(in srgb, var(--warn) 16%, transparent); color: var(--warn); border:1px solid color-mix(in srgb, var(--warn) 40%, transparent)}
+
+details{
+  border-top:1px dashed #20364d;
+  padding-top:.75rem;
+}
+summary{
+  cursor:pointer; color:var(--muted); font-size:.92rem;
+  list-style:none;
+}
+summary::-webkit-details-marker{ display:none; }
+.meta{
+  display:grid; gap:.35rem; margin-top:.5rem;
+  color:var(--muted); font-size:.92rem;
 }
 
-/* Input focus effect */
-input:focus {
-    border-color: #6a11cb;
-    outline: none;
-    box-shadow: 0 0 5px rgba(106, 17, 203, 0.3);
+footer{
+  margin-top:1rem; color:var(--muted); font-size:.85rem;
+}
+a{ color:var(--accent); text-decoration:none }
+a:hover{ text-decoration:underline }
+.sr-only{
+  position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;
 }
 
-/* Button styling with gradient background */
-button {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
+/* COPYRIGHT FOOTER (bottom right, clickable link) */
+.copyright {
+  position: fixed;
+  bottom: 12px;
+  right: 16px;        /* ✅ use right instead of left */
+  font-size: 0.85rem;
+  color: var(--muted);
+  opacity: 0.8;
+  user-select: none;
+  z-index: 50;
+  transition: opacity 0.2s ease, color 0.2s ease;
 }
 
-/* Button hover effect */
-button:hover {
-    background: linear-gradient(135deg, #2575fc, #6a11cb);
-    box-shadow: 0 4px 10px rgba(106, 17, 203, 0.3);
+.copyright a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
 }
 
-/* Result messages styling */
-p {
-    font-size: 16px;
-    color: #555;
-    margin-top: 15px;
+.copyright a:hover {
+  text-decoration: underline;
 }
 
-/* Style the result messages with subtle colors */
-#networkInfo {
-    color: #2575fc;
-    font-weight: bold;
+.copyright:hover {
+  opacity: 1;
 }
 
-#validationResult {
-    color: #6a11cb;
-    font-weight: bold;
+/* BRAND LOGO + NAME DISPLAY */
+.brand-chip {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  min-width: 120px;
+  text-align: right;
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
-/* Responsive design for smaller screens */
-@media (max-width: 500px) {
-    .container {
-        padding: 20px;
-        width: 90%;
-    }
-
-    h1 {
-        font-size: 22px;
-    }
-
-    input, button {
-        font-size: 15px;
-    }
-}
-
-#validatorContainer {
-    width: 350px; /* Adjust width to fit content */
-    padding: 20px;
-    border-radius: 8px;
-    background-color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-#cardNumber {
-    width: 80%; /* Make the input box responsive */
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-button {
-    width: 80%;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    background-image: linear-gradient(to right, #6a11cb, #2575fc);
-    cursor: pointer;
-}
-
-#networkInfo, #validationResult {
-    margin-top: 10px;
-    font-size: 1rem;
-    color: #333;
-}
-
-#footer {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    color: white;
-    font-size: 14px;
-}
-
-#footer a {
-    color: white;
-    text-decoration: underline;
-}
-
-#footer a:hover {
-    color: lightblue;
-    text-decoration: underline;
-    
-}
-
-#footer p {
-    color: white;
-    text-decoration: none;
-}
-
-#footer a:hover {
-    text-decoration: underline;
-}
-
-#siteIcon {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    width: 80px; /* Adjust size as needed */
-    height: auto;
-    z-index: 1000; /* Ensures it stays on top */
-}
-
-.validator-title {
-    position: fixed;
-    top: 50px;
-    left: 120px;
-    width: auto; /* Adjust size as needed */
-    height: auto;
-    z-index: 1000; /* Ensures it stays on top */
-    color: white;
+.brand-chip img {
+  height: 20px;
+  width: auto;
+  display: none; /* Hidden until a card network is detected */
 }

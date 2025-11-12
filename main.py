@@ -1,4 +1,3 @@
-# https://www.ibm.com/docs/en/order-management-sw/9.3.0?topic=cpms-handling-credit-cards
 import math 
 
 while True:
@@ -82,6 +81,7 @@ while True:
                 print("This card is not Valid.")
                 print("")
     
+    network_name = ""
     #Checks if card number has the correct number of digits
     if len(str_card_number) == 13 or len(str_card_number) == 15 or len(str_card_number) == 16:
         print("Number of digits: "+str(len(str_card_number)))
